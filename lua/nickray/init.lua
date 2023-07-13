@@ -1,2 +1,3 @@
-require("nickray.remap")
 require("nickray.packer")
+require("nickray.set")
+require("nickray.remap")
