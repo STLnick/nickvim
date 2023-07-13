@@ -18,10 +18,36 @@ return require('packer').startup(function(use)
   use({ 'rose-pine/neovim', as = 'rose-pine' })
   vim.cmd('colorscheme rose-pine')
 
-  -- Treesitter syntax highlighting
-  use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
-  use('nvim-treesitter/playground')
-  use('theprimeagen/harpoon')
-  use('mbbill/undotree')
-  use('tpope/vim-fugitive')
+  use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'}) -- Syntax highlighting
+  use('nvim-treesitter/playground') -- Show AST of file
+  use('theprimeagen/harpoon') -- Quick File Switching
+  use('theprimeagen/vim-be-good') -- Vim Training plugin
+  use('mbbill/undotree') -- Show edit history with branches
+  use('tpope/vim-fugitive') -- Git wrapper around Vim Git
+
+  -- LSP and Autocompletion
+  use {
+	  'VonHeikemen/lsp-zero.nvim',
+	  branch = 'v1.x',
+	  requires = {
+		  -- LSP Support
+		  {'neovim/nvim-lspconfig'},
+		  {'williamboman/mason.nvim'},
+		  {'williamboman/mason-lspconfig.nvim'},
+
+		  -- Autocompletion
+		  {'hrsh7th/nvim-cmp'},
+		  {'hrsh7th/cmp-buffer'},
+		  {'hrsh7th/cmp-path'},
+		  {'saadparwaiz1/cmp_luasnip'},
+		  {'hrsh7th/cmp-nvim-lsp'},
+		  {'hrsh7th/cmp-nvim-lua'},
+
+		  -- Snippets
+		  {'L3MON4D3/LuaSnip'},
+		  {'rafamadriz/friendly-snippets'},
+	  }
+  }
+
+  use('folke/zen-mode.nvim') -- Zen mode
 end)
