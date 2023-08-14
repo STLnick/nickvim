@@ -7,6 +7,7 @@ lsp.ensure_installed({
 	'gopls',
 	'tsserver',
 	'rust_analyzer',
+    'volar',
 })
 
 -- Fix Undefined global 'vim'
