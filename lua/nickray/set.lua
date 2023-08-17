@@ -8,11 +8,18 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
+-- Create function here that can set above vals to arg
+function SetTab(size)
+    vim.opt.tabstop = size
+    vim.opt.softtabstop = size
+    vim.opt.shiftwidth = size
+end
+
 vim.opt.splitright = true
 
 vim.opt.smartindent = true
 
-vim.opt.wrap = false
+vim.opt.wrap = true
 
 vim.opt.swapfile = false
 vim.opt.backup = false
