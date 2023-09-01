@@ -2,18 +2,14 @@ vim.opt.guicursor = ""
 
 vim.opt.nu = true
 vim.opt.relativenumber = true
-
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
--- Create function here that can set above vals to arg
 function SetTab(size)
     vim.opt.tabstop = size
     vim.opt.softtabstop = size
     vim.opt.shiftwidth = size
 end
+SetTab(4)
 
 vim.opt.splitright = true
 
@@ -41,6 +37,9 @@ vim.opt.colorcolumn = "100"
 
 vim.g.mapleader = " "
 
+-- Use Treesitter's fold expression
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
+-- Case insensitive directory sorting
+vim.g.netrw_sort_options = "i"
