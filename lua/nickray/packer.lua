@@ -43,8 +43,8 @@ function ColorSchemeSetup(use)
 end
 
 return require("packer").startup(function(use)
-  use "wbthomason/packer.nvim" -- Packer can manage itself
-  use "dense-analysis/ale" -- ALE for linting/fixing
+  use("wbthomason/packer.nvim") -- Packer can manage itself
+  use("dense-analysis/ale") -- ALE for linting/fixing
   use("nvim-treesitter/nvim-treesitter", {run = ":TSUpdate"}) -- Syntax highlighting
   use("nvim-treesitter/playground") -- Show AST of file
   use("theprimeagen/harpoon") -- Quick File Switching
