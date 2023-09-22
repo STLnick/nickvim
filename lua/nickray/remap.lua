@@ -3,6 +3,7 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.keymap.set("i", "jj", "<Esc>") 
 vim.keymap.set("n", "<leader>q", vim.cmd.quit)
 vim.keymap.set("n", "<leader>qq", "%bd | e # | normal `\"")
+vim.keymap.set("n", "<leader>l", ":e #<Enter>")
 
 -- Write commands
 vim.keymap.set("n", "<leader>w", vim.cmd.write)
