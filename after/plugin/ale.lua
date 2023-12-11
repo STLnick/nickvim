@@ -7,5 +7,5 @@ vim.g.ale_fixers = {
 vim.g.ale_linters = {
     javascript = {'eslint'},
 }
-vim.g.ale_fix_on_save = 1
+vim.g.ale_fix_on_save = 0
 vim.g.ale_linters_explicit = 1

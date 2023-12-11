@@ -1,6 +1,7 @@
 -- Misc
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.keymap.set("i", "jj", "<Esc>") -- Exit insert mode
+vim.keymap.set("t", "jj", "<C-/><C-n>") -- Exit insert mode from terminal mode
 vim.keymap.set("n", "<leader>q", vim.cmd.quit) -- Quit
 vim.keymap.set("n", "<leader>qq", "%bd | e # | normal `\"") -- Quit all
 vim.keymap.set("n", "<leader>l", ":e #<Enter>") -- Edit last file
