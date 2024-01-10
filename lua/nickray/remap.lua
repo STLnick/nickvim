@@ -5,6 +5,7 @@ vim.keymap.set("t", "jj", "<C-/><C-n>") -- Exit insert mode from terminal mode
 vim.keymap.set("n", "<leader>q", vim.cmd.quit) -- Quit
 vim.keymap.set("n", "<leader>qq", "%bd | e # | normal `\"") -- Quit all
 vim.keymap.set("n", "<leader>l", ":e #<Enter>") -- Edit last file
+vim.keymap.set("n", "<leader>e", ":e<Enter>") -- Reload file, helpful if LSP crashes
 
 -- Write commands
 vim.keymap.set("n", "<leader>w", vim.cmd.write)
