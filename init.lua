@@ -63,6 +63,7 @@ lazy.setup({
 		branch = "harpoon2",
 		dependencies = { "nvim-lua/plenary.nvim" }
 	},
+    {'folke/tokyonight.nvim'},
 })
 
 -----------------
@@ -233,6 +234,7 @@ vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
+vim.cmd.colorscheme('tokyonight')
 
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
