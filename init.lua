@@ -81,7 +81,7 @@ end)
 -----------------
 require("mason").setup({})
 require("mason-lspconfig").setup({
-    ensure_installed = {},
+    ensure_installed = { "bashls", "clangd", "eslint", "gopls", "lua_ls", "sqlls", "tsserver", "volar" },
     handlers = {
         function(server_name)
             require("lspconfig")[server_name].setup({})
@@ -200,6 +200,7 @@ local function toggle_telescope(harpoon_files)
     }):find()
 end
 local builtin = require("telescope.builtin")
+
 vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
 vim.keymap.set("n", "<leader>ps", function() 
     builtin.grep_string({ search = vim.fn.input("Grep > ") })
