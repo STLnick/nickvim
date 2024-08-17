@@ -17,29 +17,29 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-local ok, lazy = pcall(require, 'lazy')
+local ok, lazy = pcall(require, "lazy")
 
 if not ok then
-    local msg = 'You need to install the plugin manager lazy.nvim\n'
-    .. 'in this folder: ' .. lazypath
+    local msg = "You need to install the plugin manager lazy.nvim\n"
+    .. "in this folder: " .. lazypath
 
     print(msg)
     return
 end
 
 lazy.setup({
-    {'VonHeikemen/lsp-zero.nvim', branch = 'v3.x'},
-    {'williamboman/mason.nvim'},
-    {'williamboman/mason-lspconfig.nvim'},
-    {'neovim/nvim-lspconfig'},
-    {'hrsh7th/nvim-cmp'},
-    {'hrsh7th/cmp-nvim-lsp'},
-    {'hrsh7th/cmp-buffer'},
-    {'hrsh7th/cmp-path'},
-    {'saadparwaiz1/cmp_luasnip'},
-    {'hrsh7th/cmp-nvim-lua'},
-    {'L3MON4D3/LuaSnip'},
-    {'rafamadriz/friendly-snippets'},
+    {"VonHeikemen/lsp-zero.nvim", branch = "v3.x"},
+    {"williamboman/mason.nvim"},
+    {"williamboman/mason-lspconfig.nvim"},
+    {"neovim/nvim-lspconfig"},
+    {"hrsh7th/nvim-cmp"},
+    {"hrsh7th/cmp-nvim-lsp"},
+    {"hrsh7th/cmp-buffer"},
+    {"hrsh7th/cmp-path"},
+    {"saadparwaiz1/cmp_luasnip"},
+    {"hrsh7th/cmp-nvim-lua"},
+    {"L3MON4D3/LuaSnip"},
+    {"rafamadriz/friendly-snippets"},
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
@@ -55,21 +55,21 @@ lazy.setup({
         end
     },
     {
-        'nvim-telescope/telescope.nvim', tag = '0.1.8',
-        dependencies = { 'nvim-lua/plenary.nvim' }
+        "nvim-telescope/telescope.nvim", tag = "0.1.8",
+        dependencies = { "nvim-lua/plenary.nvim" }
     },
 	{
 		"ThePrimeagen/harpoon",
 		branch = "harpoon2",
 		dependencies = { "nvim-lua/plenary.nvim" }
 	},
-    {'folke/tokyonight.nvim'},
+    {"folke/tokyonight.nvim"},
 })
 
 -----------------
 -- LSP Zero
 -----------------
-local lsp_zero = require('lsp-zero')
+local lsp_zero = require("lsp-zero")
 lsp_zero.on_attach(function(client, bufnr)
     -- see :help lsp-zero-keybindings
     -- to learn the available actions
@@ -79,85 +79,85 @@ end)
 -----------------
 -- Mason
 -----------------
-require('mason').setup({})
-require('mason-lspconfig').setup({
+require("mason").setup({})
+require("mason-lspconfig").setup({
     ensure_installed = {},
     handlers = {
         function(server_name)
-            require('lspconfig')[server_name].setup({})
+            require("lspconfig")[server_name].setup({})
         end,
         lua_ls = function()
             local lua_opts = lsp_zero.nvim_lua_ls()
-            require('lspconfig').lua_ls.setup(lua_opts)
+            require("lspconfig").lua_ls.setup(lua_opts)
         end,
     }
 })
 
 lsp_zero.set_sign_icons({
-    error = '✘',
-    warn = '▲',
-    hint = '⚑',
-    info = ''
+    error = "✘",
+    warn = "▲",
+    hint = "⚑",
+    info = ""
 })
 
 vim.diagnostic.config({
     virtual_text = false,
     severity_sort = true,
     float = {
-        style = 'minimal',
-        border = 'rounded',
-        source = 'always',
-        header = '',
-        prefix = '',
+        style = "minimal",
+        border = "rounded",
+        source = "always",
+        header = "",
+        prefix = "",
     },
 })
 
-local cmp = require('cmp')
+local cmp = require("cmp")
 local cmp_action = lsp_zero.cmp_action()
 local cmp_format = lsp_zero.cmp_format()
 
-require('luasnip.loaders.from_vscode').lazy_load()
+require("luasnip.loaders.from_vscode").lazy_load()
 
-vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
+vim.opt.completeopt = {"menu", "menuone", "noselect"}
 
 cmp.setup({
     formatting = cmp_format,
-    preselect = 'item',
+    preselect = "item",
     completion = {
-        completeopt = 'menu,menuone,noinsert'
+        completeopt = "menu,menuone,noinsert"
     },
     window = {
         documentation = cmp.config.window.bordered(),
     },
     sources = {
-        {name = 'path'},
-        {name = 'nvim_lsp'},
-        {name = 'nvim_lua'},
-        {name = 'buffer', keyword_length = 3},
-        {name = 'luasnip', keyword_length = 2},
+        {name = "path"},
+        {name = "nvim_lsp"},
+        {name = "nvim_lua"},
+        {name = "buffer", keyword_length = 3},
+        {name = "luasnip", keyword_length = 2},
     },
     mapping = cmp.mapping.preset.insert({
         -- confirm completion item
-        ['<CR>'] = cmp.mapping.confirm({select = false}),
+        ["<CR>"] = cmp.mapping.confirm({select = false}),
 
         -- toggle completion menu
-        ['<C-e>'] = cmp_action.toggle_completion(),
+        ["<C-e>"] = cmp_action.toggle_completion(),
 
         -- tab complete
-        ['<Tab>'] = cmp_action.tab_complete(),
-        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+        ["<Tab>"] = cmp_action.tab_complete(),
+        ["<S-Tab>"] = cmp.mapping.select_prev_item(),
 
         -- navigate between snippet placeholder
-        ['<C-d>'] = cmp_action.luasnip_jump_forward(),
-        ['<C-b>'] = cmp_action.luasnip_jump_backward(),
+        ["<C-d>"] = cmp_action.luasnip_jump_forward(),
+        ["<C-b>"] = cmp_action.luasnip_jump_backward(),
 
         -- scroll documentation window
-        ['<C-f>'] = cmp.mapping.scroll_docs(5),
-        ['<C-u>'] = cmp.mapping.scroll_docs(-5),
+        ["<C-f>"] = cmp.mapping.scroll_docs(5),
+        ["<C-u>"] = cmp.mapping.scroll_docs(-5),
     }),
     snippet = {
         expand = function(args)
-            require('luasnip').lsp_expand(args.body)
+            require("luasnip").lsp_expand(args.body)
         end,
     },
 })
@@ -239,7 +239,7 @@ vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
-vim.cmd.colorscheme('tokyonight')
+vim.cmd.colorscheme("tokyonight")
 
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
@@ -251,7 +251,7 @@ vim.opt.colorcolumn = "100"
 
 vim.g.mapleader = " "
 
--- Use Treesitter's fold expression
+-- Use Treesitter"s fold expression
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
