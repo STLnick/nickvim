@@ -3,8 +3,6 @@ vim.g.mapleader = " "
 -----------------
 -- Lazy package manager
 -----------------
-print('A :: LAZY')
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -73,8 +71,6 @@ lazy.setup({
 -----------------
 -- LSP Zero
 -----------------
-print('B :: LSP Zero')
-
 local lsp_zero = require("lsp-zero")
 local lsp_attach = function(client, bufnr)
   -- see :help lsp-zero-keybindings
@@ -91,8 +87,6 @@ lsp_zero.extend_lspconfig({
 -----------------
 -- Mason
 -----------------
-print('C :: Mason')
-
 require("mason").setup({})
 require("mason-lspconfig").setup({
     ensure_installed = { "bashls", "clangd", "eslint", "gopls", "lua_ls", "sqlls", "tsserver", "volar" },
@@ -179,8 +173,6 @@ cmp.setup({
 -----------------
 -- Harpoon
 -----------------
-print('D :: Harpoon')
-
 local harpoon = require("harpoon")
 
 vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
@@ -199,8 +191,6 @@ vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
 -----------------
 -- Telescope
 -----------------
-print('E :: Telescope')
-
 local conf = require("telescope.config").values
 local builtin = require("telescope.builtin")
 
@@ -222,22 +212,14 @@ end
 vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
   { desc = "Open harpoon window" })
 
-print('E :: A :: builtin.find_files=', builtin.find_files)
-
 vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
-
-print('E :: B :: set "pf" keymap (find files)')
-
 vim.keymap.set("n", "<leader>ps", function() 
     builtin.grep_string({ search = vim.fn.input("Grep > ") })
 end)
 
-
 -----------------
 -- Vim Settings
 -----------------
-print('F :: Vim Settings')
-
 vim.opt.guicursor = ""
 
 vim.opt.nu = true
@@ -286,8 +268,6 @@ vim.g.netrw_sort_options = "i"
 -----------------
 -- Remaps
 -----------------
-print('G :: Vim Remaps')
-
 -- Misc
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.keymap.set("i", "jj", "<Esc>") -- Exit insert mode
