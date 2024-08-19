@@ -1,6 +1,10 @@
+vim.g.mapleader = " "
+
 -----------------
 -- Lazy package manager
 -----------------
+print('A :: LAZY')
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -28,7 +32,7 @@ if not ok then
 end
 
 lazy.setup({
-    {"VonHeikemen/lsp-zero.nvim", branch = "v3.x"},
+    {"VonHeikemen/lsp-zero.nvim", branch = "v4.x"},
     {"williamboman/mason.nvim"},
     {"williamboman/mason-lspconfig.nvim"},
     {"neovim/nvim-lspconfig"},
@@ -69,16 +73,26 @@ lazy.setup({
 -----------------
 -- LSP Zero
 -----------------
+print('B :: LSP Zero')
+
 local lsp_zero = require("lsp-zero")
-lsp_zero.on_attach(function(client, bufnr)
-    -- see :help lsp-zero-keybindings
-    -- to learn the available actions
-    lsp_zero.default_keymaps({buffer = bufnr})
-end)
+local lsp_attach = function(client, bufnr)
+  -- see :help lsp-zero-keybindings
+  -- to learn the available actions
+  lsp_zero.default_keymaps({buffer = bufnr})
+end
+lsp_zero.extend_lspconfig({
+  capabilities = require("cmp_nvim_lsp").default_capabilities(),
+  lsp_attach = lsp_attach,
+  float_border = "rounded",
+  sign_text = true,
+})
 
 -----------------
 -- Mason
 -----------------
+print('C :: Mason')
+
 require("mason").setup({})
 require("mason-lspconfig").setup({
     ensure_installed = { "bashls", "clangd", "eslint", "gopls", "lua_ls", "sqlls", "tsserver", "volar" },
@@ -165,6 +179,8 @@ cmp.setup({
 -----------------
 -- Harpoon
 -----------------
+print('D :: Harpoon')
+
 local harpoon = require("harpoon")
 
 vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
@@ -183,7 +199,11 @@ vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
 -----------------
 -- Telescope
 -----------------
+print('E :: Telescope')
+
 local conf = require("telescope.config").values
+local builtin = require("telescope.builtin")
+
 local function toggle_telescope(harpoon_files)
     local file_paths = {}
     for _, item in ipairs(harpoon_files.items) do
@@ -199,19 +219,25 @@ local function toggle_telescope(harpoon_files)
         sorter = conf.generic_sorter({}),
     }):find()
 end
-local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
+  { desc = "Open harpoon window" })
+
+print('E :: A :: builtin.find_files=', builtin.find_files)
 
 vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
+
+print('E :: B :: set "pf" keymap (find files)')
+
 vim.keymap.set("n", "<leader>ps", function() 
     builtin.grep_string({ search = vim.fn.input("Grep > ") })
 end)
 
-vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
-  { desc = "Open harpoon window" })
 
 -----------------
 -- Vim Settings
 -----------------
+print('F :: Vim Settings')
+
 vim.opt.guicursor = ""
 
 vim.opt.nu = true
@@ -250,8 +276,6 @@ vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "100"
 
-vim.g.mapleader = " "
-
 -- Use Treesitter"s fold expression
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
@@ -262,6 +286,7 @@ vim.g.netrw_sort_options = "i"
 -----------------
 -- Remaps
 -----------------
+print('G :: Vim Remaps')
 
 -- Misc
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
