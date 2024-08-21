@@ -10,7 +10,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     if vim.v.shell_error ~= 0 then
         vim.api.nvim_echo({
             { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-            { out, "WarningMsg" },
+            { out,                            "WarningMsg" },
             { "\nPress any key to exit..." },
         }, true, {})
         vim.fn.getchar()
@@ -23,49 +23,61 @@ local ok, lazy = pcall(require, "lazy")
 
 if not ok then
     local msg = "You need to install the plugin manager lazy.nvim\n"
-    .. "in this folder: " .. lazypath
+        .. "in this folder: " .. lazypath
 
     print(msg)
     return
 end
 
 lazy.setup({
-    {"VonHeikemen/lsp-zero.nvim", branch = "v4.x"},
-    {"williamboman/mason.nvim"},
-    {"williamboman/mason-lspconfig.nvim"},
-    {"neovim/nvim-lspconfig"},
-    {"hrsh7th/nvim-cmp"},
-    {"hrsh7th/cmp-nvim-lsp"},
-    {"hrsh7th/cmp-buffer"},
-    {"hrsh7th/cmp-path"},
-    {"saadparwaiz1/cmp_luasnip"},
-    {"hrsh7th/cmp-nvim-lua"},
-    {"L3MON4D3/LuaSnip"},
-    {"rafamadriz/friendly-snippets"},
+    { "VonHeikemen/lsp-zero.nvim",        branch = "v4.x" },
+    { "williamboman/mason.nvim" },
+    { "williamboman/mason-lspconfig.nvim" },
+    { "neovim/nvim-lspconfig" },
+    { "hrsh7th/nvim-cmp" },
+    { "hrsh7th/cmp-nvim-lsp" },
+    { "hrsh7th/cmp-buffer" },
+    { "hrsh7th/cmp-path" },
+    { "saadparwaiz1/cmp_luasnip" },
+    { "hrsh7th/cmp-nvim-lua" },
+    { "L3MON4D3/LuaSnip" },
+    { "rafamadriz/friendly-snippets" },
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        config = function () 
+        config = function()
             local configs = require("nvim-treesitter.configs")
 
             configs.setup({
                 ensure_installed = { "c", "lua", "vim", "vimdoc", "javascript", "html", "go", "vue" },
                 sync_install = false,
                 highlight = { enable = true },
-                indent = { enable = true },  
+                indent = { enable = true },
             })
         end
     },
     {
-        "nvim-telescope/telescope.nvim", tag = "0.1.8",
+        "nvim-telescope/telescope.nvim",
+        tag = "0.1.8",
         dependencies = { "nvim-lua/plenary.nvim" }
     },
-	{
-		"ThePrimeagen/harpoon",
-		branch = "harpoon2",
-		dependencies = { "nvim-lua/plenary.nvim" }
-	},
-    {"folke/tokyonight.nvim"},
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        dependencies = { "nvim-lua/plenary.nvim" }
+    },
+    { "folke/tokyonight.nvim" },
+    {
+        "folke/zen-mode.nvim",
+        opts = {
+            window = {
+                backdrop = 0.99,
+                width = 150,
+                number = true,
+                relativenumber = true,
+            }
+        }
+    }
 })
 
 -----------------
@@ -73,15 +85,15 @@ lazy.setup({
 -----------------
 local lsp_zero = require("lsp-zero")
 local lsp_attach = function(client, bufnr)
-  -- see :help lsp-zero-keybindings
-  -- to learn the available actions
-  lsp_zero.default_keymaps({buffer = bufnr})
+    -- see :help lsp-zero-keybindings
+    -- to learn the available actions
+    lsp_zero.default_keymaps({ buffer = bufnr })
 end
 lsp_zero.extend_lspconfig({
-  capabilities = require("cmp_nvim_lsp").default_capabilities(),
-  lsp_attach = lsp_attach,
-  float_border = "rounded",
-  sign_text = true,
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    lsp_attach = lsp_attach,
+    float_border = "rounded",
+    sign_text = true,
 })
 
 -----------------
@@ -126,7 +138,7 @@ local cmp_format = lsp_zero.cmp_format()
 
 require("luasnip.loaders.from_vscode").lazy_load()
 
-vim.opt.completeopt = {"menu", "menuone", "noselect"}
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 cmp.setup({
     formatting = cmp_format,
@@ -138,15 +150,15 @@ cmp.setup({
         documentation = cmp.config.window.bordered(),
     },
     sources = {
-        {name = "path"},
-        {name = "nvim_lsp"},
-        {name = "nvim_lua"},
-        {name = "buffer", keyword_length = 3},
-        {name = "luasnip", keyword_length = 2},
+        { name = "path" },
+        { name = "nvim_lsp" },
+        { name = "nvim_lua" },
+        { name = "buffer",  keyword_length = 3 },
+        { name = "luasnip", keyword_length = 2 },
     },
     mapping = cmp.mapping.preset.insert({
         -- confirm completion item
-        ["<CR>"] = cmp.mapping.confirm({select = false}),
+        ["<CR>"] = cmp.mapping.confirm({ select = false }),
 
         -- toggle completion menu
         ["<C-e>"] = cmp_action.toggle_completion(),
@@ -191,31 +203,36 @@ vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
 -----------------
 -- Telescope
 -----------------
-local conf = require("telescope.config").values
+-- local conf = require("telescope.config").values
 local builtin = require("telescope.builtin")
 
-local function toggle_telescope(harpoon_files)
-    local file_paths = {}
-    for _, item in ipairs(harpoon_files.items) do
-        table.insert(file_paths, item.value)
-    end
-
-    require("telescope.pickers").new({}, {
-        prompt_title = "Harpoon",
-        finder = require("telescope.finders").new_table({
-            results = file_paths,
-        }),
-        previewer = conf.file_previewer({}),
-        sorter = conf.generic_sorter({}),
-    }):find()
-end
-vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
-  { desc = "Open harpoon window" })
+-- local function toggle_telescope(harpoon_files)
+--     local file_paths = {}
+--     for _, item in ipairs(harpoon_files.items) do
+--         table.insert(file_paths, item.value)
+--     end
+--
+--     require("telescope.pickers").new({}, {
+--         prompt_title = "Harpoon",
+--         finder = require("telescope.finders").new_table({
+--             results = file_paths,
+--         }),
+--         previewer = conf.file_previewer({}),
+--         sorter = conf.generic_sorter({}),
+--     }):find()
+-- end
+-- vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
+--   { desc = "Open harpoon window" })
 
 vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
-vim.keymap.set("n", "<leader>ps", function() 
+vim.keymap.set("n", "<leader>ps", function()
     builtin.grep_string({ search = vim.fn.input("Grep > ") })
 end)
+
+-----------------
+-- Zen Mode
+-----------------
+vim.keymap.set("n", "<leader>zz", function () require("zen-mode").toggle() end)
 
 -----------------
 -- Vim Settings
@@ -231,6 +248,7 @@ function SetTab(size)
     vim.opt.softtabstop = size
     vim.opt.shiftwidth = size
 end
+
 SetTab(4)
 
 vim.opt.splitright = true
@@ -270,12 +288,12 @@ vim.g.netrw_sort_options = "i"
 -----------------
 -- Misc
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
-vim.keymap.set("i", "jj", "<Esc>") -- Exit insert mode
-vim.keymap.set("t", "jj", "<C-/><C-n>") -- Exit insert mode from terminal mode
-vim.keymap.set("n", "<leader>q", vim.cmd.quit) -- Quit
+vim.keymap.set("i", "jj", "<Esc>")                          -- Exit insert mode
+vim.keymap.set("t", "jj", "<C-/><C-n>")                     -- Exit insert mode from terminal mode
+vim.keymap.set("n", "<leader>q", vim.cmd.quit)              -- Quit
 vim.keymap.set("n", "<leader>qq", "%bd | e # | normal `\"") -- Quit all
-vim.keymap.set("n", "<leader>l", ":e #<Enter>") -- Edit last file
-vim.keymap.set("n", "<leader>e", ":e<Enter>") -- Reload file, helpful if LSP crashes
+vim.keymap.set("n", "<leader>l", ":e #<Enter>")             -- Edit last file
+vim.keymap.set("n", "<leader>e", ":e<Enter>")               -- Reload file, helpful if LSP crashes
 
 -- Write commands
 vim.keymap.set("n", "<leader>w", vim.cmd.write)
@@ -290,8 +308,8 @@ vim.keymap.set("n", "<leader>sv", "<C-w>v")
 vim.keymap.set("n", "<leader>sh", "<C-w>s")
 
 -- Replace
-vim.keymap.set("n", "<leader>rw", "ciw<C-r>0<Esc>") -- word with buffer
-vim.keymap.set("n", "<leader>rf", ":%s/\\<<C-r><C-w>\\>/") -- file
+vim.keymap.set("n", "<leader>rw", "ciw<C-r>0<Esc>")          -- word with buffer
+vim.keymap.set("n", "<leader>rf", ":%s/\\<<C-r><C-w>\\>/")   -- file
 vim.keymap.set("n", "<leader>rb", "yiw[{V%:s/\\<<C-r>0\\>/") -- block
 
 -- Navigation
