@@ -30,7 +30,7 @@ if not ok then
 end
 
 lazy.setup({
-    { "VonHeikemen/lsp-zero.nvim",        branch = "v4.x" },
+    { "VonHeikemen/lsp-zero.nvim", branch = "v4.x" },
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
     { "neovim/nvim-lspconfig" },
@@ -84,15 +84,21 @@ lazy.setup({
 -- LSP Zero
 -----------------
 local lsp_zero = require("lsp-zero")
-local lsp_attach = function(client, bufnr)
-    -- see :help lsp-zero-keybindings
-    -- to learn the available actions
-    lsp_zero.default_keymaps({ buffer = bufnr })
+local lsp_attach = function(_, bufnr)
+    lsp_zero.default_keymaps({ buffer = bufnr, preserve_mappings = false })
+
+    local opts = { buffer = bufnr }
+    vim.keymap.set('n', '<leader>d', function() vim.diagnostic.open_float() end, opts)
+    vim.keymap.set('n', '[d', function() vim.diagnostic.goto_next() end, opts)
+    vim.keymap.set('n', ']d', function() vim.diagnostic.goto_prev() end, opts)
+    vim.keymap.set('n', '<leader>vca', function() vim.lsp.buf.code_action() end, opts)
+    vim.keymap.set('n', '<leader>vrr', function() vim.lsp.buf.references() end, opts)
+    vim.keymap.set('n', '<leader>vrn', function() vim.lsp.buf.rename() end, opts)
 end
 lsp_zero.extend_lspconfig({
     capabilities = require("cmp_nvim_lsp").default_capabilities(),
-    lsp_attach = lsp_attach,
     float_border = "rounded",
+    lsp_attach = lsp_attach,
     sign_text = true,
 })
 
@@ -101,7 +107,7 @@ lsp_zero.extend_lspconfig({
 -----------------
 require("mason").setup({})
 require("mason-lspconfig").setup({
-    ensure_installed = { "bashls", "clangd", "eslint", "gopls", "lua_ls", "sqlls", "tsserver", "volar" },
+    ensure_installed = { "eslint", "gopls", "lua_ls", "tsserver", "volar" },
     handlers = {
         function(server_name)
             require("lspconfig")[server_name].setup({})
@@ -134,19 +140,19 @@ vim.diagnostic.config({
 
 local cmp = require("cmp")
 local cmp_action = lsp_zero.cmp_action()
-local cmp_format = lsp_zero.cmp_format()
 
 require("luasnip.loaders.from_vscode").lazy_load()
 
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 cmp.setup({
-    formatting = cmp_format,
+    formatting = lsp_zero.cmp_format({ details = true }),
     preselect = "item",
     completion = {
         completeopt = "menu,menuone,noinsert"
     },
     window = {
+        completion = cmp.config.window.bordered(),
         documentation = cmp.config.window.bordered(),
     },
     sources = {
@@ -199,31 +205,10 @@ vim.keymap.set("n", "<C-s>", function() harpoon:list():select(4) end)
 vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
 vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
 
-
 -----------------
 -- Telescope
 -----------------
--- local conf = require("telescope.config").values
 local builtin = require("telescope.builtin")
-
--- local function toggle_telescope(harpoon_files)
---     local file_paths = {}
---     for _, item in ipairs(harpoon_files.items) do
---         table.insert(file_paths, item.value)
---     end
---
---     require("telescope.pickers").new({}, {
---         prompt_title = "Harpoon",
---         finder = require("telescope.finders").new_table({
---             results = file_paths,
---         }),
---         previewer = conf.file_previewer({}),
---         sorter = conf.generic_sorter({}),
---     }):find()
--- end
--- vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
---   { desc = "Open harpoon window" })
-
 vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
 vim.keymap.set("n", "<leader>ps", function()
     builtin.grep_string({ search = vim.fn.input("Grep > ") })
