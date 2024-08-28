@@ -279,6 +279,9 @@ vim.keymap.set("n", "<leader>q", vim.cmd.quit)              -- Quit
 vim.keymap.set("n", "<leader>qq", "%bd | e # | normal `\"") -- Quit all
 vim.keymap.set("n", "<leader>l", ":e #<Enter>")             -- Edit last file
 vim.keymap.set("n", "<leader>e", ":e<Enter>")               -- Reload file, helpful if LSP crashes
+vim.keymap.set("n", "<leader><leader>y", "\"+yiw")          -- Yank word to system clipboard
+vim.keymap.set("v", "<leader><leader>y", "\"+y")            -- Yank highlighted text to system clipboard
+vim.keymap.set({"n", "v"}, "<leader><leader>p", "\"+p")     -- Past from system clipboard
 
 -- Write commands
 vim.keymap.set("n", "<leader>w", vim.cmd.write)
