@@ -77,7 +77,28 @@ lazy.setup({
                 relativenumber = true,
             }
         }
-    }
+    },
+    { "github/copilot.vim" },
+    {
+        "toppair/peek.nvim",
+        event = { "VeryLazy" },
+        build = "deno task --quiet build:fast",
+        config = function()
+            local peek = require("peek")
+            peek.setup()
+
+            vim.api.nvim_create_user_command("PeekOpen", peek.open, {})
+            vim.api.nvim_create_user_command("PeekClose", peek.close, {})
+
+            vim.keymap.set("n", "<C-p>", function()
+                if peek.is_open() then
+                    peek.close()
+                else
+                    peek.open()
+                end
+            end)
+        end,
+    },
 })
 
 -----------------
@@ -107,7 +128,7 @@ lsp_zero.extend_lspconfig({
 -----------------
 require("mason").setup({})
 require("mason-lspconfig").setup({
-    ensure_installed = { "eslint", "gopls", "lua_ls", "tsserver", "volar" },
+    ensure_installed = { "eslint", "gopls", "lua_ls", "volar" },
     handlers = {
         function(server_name)
             require("lspconfig")[server_name].setup({})
@@ -303,3 +324,14 @@ vim.keymap.set("n", "<leader>rb", "yiw[{V%:s/\\<<C-r>0\\>/") -- block
 -- Navigation
 vim.keymap.set("n", "<leader>tn", "<C-w><C-w>")
 vim.keymap.set("n", "<leader>th", "<C-w><C-h>")
+
+-- Copilot
+-- accept suggestion
+vim.keymap.set('i', '<C-J>', 'copilot#Accept("\\<CR>")', {
+    expr = true,
+    replace_keycodes = false
+})
+vim.g.copilot_no_tab_map = true
+
+-- accept one word of suggestion
+vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
