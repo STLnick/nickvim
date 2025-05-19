@@ -261,12 +261,12 @@ vim.opt.splitright = true
 
 vim.opt.smartindent = true
 
-vim.opt.wrap = true
+vim.opt.wrap = false
 
 vim.opt.swapfile = false
 vim.opt.backup = false
---vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
+vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
 
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
@@ -335,3 +335,5 @@ vim.g.copilot_no_tab_map = true
 
 -- accept one word of suggestion
 vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
+
+
